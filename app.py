@@ -171,12 +171,12 @@ st.markdown(
     """
     <div class="header">
 
-        <h1>🌿 Deteksi Simplisia Fructus</h1>
+        🌿 Deteksi Simplisia Fructus
 
-        <p>
+        
             Sistem Klasifikasi Simplisia Fructus
             Berbasis Convolutional Neural Network (CNN)
-        </p>
+        
 
     </div>
     """,
@@ -506,7 +506,7 @@ st.markdown(
     """
     <div class="footer">
 
-        <b>Deteksi Simplisia Fructus</b><br>
+        Deteksi Simplisia Fructus
 
         Sistem klasifikasi berbasis
         Convolutional Neural Network (CNN)
