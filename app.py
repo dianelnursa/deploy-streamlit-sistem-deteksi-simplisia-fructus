@@ -16,7 +16,7 @@ st.set_page_config(
 
 
 # =========================================================
-# CUSTOM CSS
+# CSS / TAMPILAN
 # =========================================================
 
 st.markdown(
@@ -24,7 +24,7 @@ st.markdown(
     <style>
 
     .stApp {
-        background-color: #f7f9f7;
+        background-color: #f5f8f5;
     }
 
     .block-container {
@@ -33,78 +33,67 @@ st.markdown(
         padding-bottom: 3rem;
     }
 
-    .header-box {
-        background: linear-gradient(135deg, #1b5e20, #388e3c);
-        padding: 35px 30px;
+    .header {
+        background: linear-gradient(135deg, #1b5e20, #43a047);
+        padding: 35px 25px;
         border-radius: 20px;
         text-align: center;
         color: white;
         margin-bottom: 25px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
     }
 
-    .header-title {
+    .header h1 {
         font-size: 34px;
-        font-weight: 700;
         margin-bottom: 8px;
     }
 
-    .header-subtitle {
+    .header p {
         font-size: 16px;
-        opacity: 0.92;
+        margin: 0;
     }
 
-    .section-title {
-        font-size: 23px;
-        font-weight: 700;
-        color: #1b5e20;
-        margin-top: 25px;
-        margin-bottom: 10px;
-    }
-
-    .info-box {
-        background-color: white;
+    .info-card {
+        background: white;
         padding: 20px;
         border-radius: 15px;
-        border-left: 5px solid #388e3c;
-        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
-        margin-bottom: 20px;
+        border-left: 5px solid #43a047;
+        margin: 15px 0;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.06);
     }
 
-    .result-box {
-        background-color: white;
+    .result-card {
+        background: white;
         padding: 25px;
         border-radius: 18px;
         text-align: center;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         margin-top: 20px;
-        border-top: 5px solid #388e3c;
+        border-top: 5px solid #43a047;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.08);
     }
 
-    .result-label {
-        color: #666;
+    .result-title {
+        color: #777;
         font-size: 15px;
-        margin-bottom: 8px;
     }
 
     .result-name {
         color: #1b5e20;
         font-size: 27px;
-        font-weight: 700;
+        font-weight: bold;
+        margin: 10px 0;
     }
 
     .confidence {
-        font-size: 18px;
-        margin-top: 12px;
+        font-size: 17px;
         color: #444;
     }
 
-    .indication-box {
-        background-color: white;
-        padding: 22px;
-        border-radius: 15px;
-        margin-top: 15px;
-        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+    .section-title {
+        color: #1b5e20;
+        font-size: 23px;
+        font-weight: bold;
+        margin-top: 25px;
+        margin-bottom: 10px;
     }
 
     .footer {
@@ -114,13 +103,6 @@ st.markdown(
         margin-top: 40px;
         padding-top: 20px;
         border-top: 1px solid #ddd;
-    }
-
-    [data-testid="stFileUploader"] {
-        background-color: white;
-        padding: 15px;
-        border-radius: 15px;
-        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
     }
 
     </style>
@@ -135,23 +117,23 @@ st.markdown(
 
 def import_and_predict(image_data, model):
 
-    # Ukuran input mengikuti model yang digunakan saat training
+    # Ukuran input mengikuti model asli
     size = (128, 128)
 
-    # Resize dan crop gambar
+    # Resize gambar
     image = ImageOps.fit(
         image_data,
         size,
         method=Image.Resampling.LANCZOS
     )
 
-    # Pastikan gambar RGB
+    # Pastikan RGB
     image = image.convert("RGB")
 
-    # Ubah menjadi array
+    # Konversi ke NumPy
     image = np.asarray(image)
 
-    # Normalisasi pixel 0-255 menjadi 0-1
+    # Normalisasi
     image = image.astype(np.float32) / 255.0
 
     # Tambahkan dimensi batch
@@ -187,16 +169,14 @@ def load_model():
 
 st.markdown(
     """
-    <div class="header-box">
+    <div class="header">
 
-        <div class="header-title">
-            🌿 Deteksi Simplisia Fructus
-        </div>
+        <h1>🌿 Deteksi Simplisia Fructus</h1>
 
-        <div class="header-subtitle">
+        <p>
             Sistem Klasifikasi Simplisia Fructus
             Berbasis Convolutional Neural Network (CNN)
-        </div>
+        </p>
 
     </div>
     """,
@@ -205,7 +185,7 @@ st.markdown(
 
 
 # =========================================================
-# INFORMASI APLIKASI
+# INFORMASI
 # =========================================================
 
 st.markdown(
@@ -215,17 +195,14 @@ st.markdown(
 
 st.markdown(
     """
-    <div class="info-box">
+    <div class="info-card">
 
-        Aplikasi ini digunakan untuk membantu mengidentifikasi
-        jenis <b>simplisia fructus</b> berdasarkan citra atau
-        gambar yang diunggah oleh pengguna.
+    Aplikasi ini digunakan untuk membantu mendeteksi jenis
+    <b>simplisia fructus</b> berdasarkan gambar yang diunggah.
 
-        <br><br>
-
-        Sistem saat ini dapat mengenali
-        <b>7 jenis simplisia fructus</b> menggunakan model
-        Convolutional Neural Network (CNN).
+    Sistem dapat mengenali <b>7 jenis simplisia fructus</b>
+    berdasarkan model klasifikasi berbasis
+    <b>Convolutional Neural Network (CNN)</b>.
 
     </div>
     """,
@@ -237,30 +214,23 @@ st.markdown(
 # DAFTAR KELAS
 # =========================================================
 
-with st.expander("🌱 Lihat 7 jenis simplisia yang dapat dideteksi"):
+with st.expander("🌱 Lihat jenis simplisia yang dapat dideteksi"):
 
     st.markdown(
         """
-        **1. Amomi Fructus**  
-        Kapulaga
+        **1. Amomi Fructus** — Kapulaga
 
-        **2. Capsici Frutescentis Fructus**  
-        Cabai Rawit
+        **2. Cumini Fructus** — Jinten
 
-        **3. Cumini Fructus**  
-        Jinten
+        **3. Piperis Albi Fructus** — Lada Putih
 
-        **4. Piper Retrofractum Fructus**  
-        Cabai Jawa
+        **4. Piperis Nigri Fructus** — Lada Hitam
 
-        **5. Piperis Albi Fructus**  
-        Lada Putih
+        **5. Piper Retrofractum Fructus** — Cabai Jawa
 
-        **6. Piperis Nigri Fructus**  
-        Lada Hitam
+        **6. Tamarindus indica Fructus** — Asam Jawa
 
-        **7. Tamarindus indica Fructus**  
-        Asam Jawa
+        **7. Capsici Frutescentis Fructus** — Cabai Rawit
         """
     )
 
@@ -275,13 +245,14 @@ try:
 
 except Exception as e:
 
-    st.error(
-        "Model tidak dapat dimuat."
+    st.error("❌ Model tidak dapat dimuat.")
+
+    st.write(
+        "Pastikan file berikut tersedia di repository:"
     )
 
-    st.warning(
-        "Pastikan file 'Xception-fructus-98.19.h5' "
-        "sudah tersedia di repository GitHub."
+    st.code(
+        "Xception-fructus-98.19.h5"
     )
 
     st.stop()
@@ -297,7 +268,7 @@ st.markdown(
 )
 
 st.write(
-    "Silakan pilih gambar simplisia fructus "
+    "Silakan upload gambar simplisia fructus "
     "dengan format JPG, JPEG, atau PNG."
 )
 
@@ -314,13 +285,12 @@ file = st.file_uploader(
 if file is None:
 
     st.info(
-        "👆 Belum ada gambar yang diunggah. "
-        "Silakan upload gambar untuk memulai deteksi."
+        "👆 Silakan upload gambar untuk memulai proses deteksi."
     )
 
 
 # =========================================================
-# JIKA ADA GAMBAR
+# JIKA GAMBAR SUDAH DIUPLOAD
 # =========================================================
 
 else:
@@ -328,11 +298,12 @@ else:
     # Buka gambar
     image = Image.open(file)
 
-    # Pastikan RGB
+    # Konversi RGB
     image = image.convert("RGB")
 
+
     # =====================================================
-    # PREVIEW GAMBAR
+    # TAMPILKAN GAMBAR
     # =====================================================
 
     st.markdown(
@@ -356,7 +327,9 @@ else:
         unsafe_allow_html=True
     )
 
-    with st.spinner("Sedang menganalisis gambar..."):
+    with st.spinner(
+        "Sedang menganalisis gambar..."
+    ):
 
         prediction = import_and_predict(
             image,
@@ -365,7 +338,7 @@ else:
 
 
     # =====================================================
-    # AMBIL HASIL PREDIKSI
+    # HASIL PREDIKSI
     # =====================================================
 
     predicted_class = int(
@@ -450,15 +423,15 @@ else:
 
 
     # =====================================================
-    # TAMPILKAN HASIL
+    # CARD HASIL
     # =====================================================
 
     st.markdown(
         f"""
-        <div class="result-box">
+        <div class="result-card">
 
-            <div class="result-label">
-                Hasil Klasifikasi
+            <div class="result-title">
+                HASIL TERDETEKSI
             </div>
 
             <div class="result-name">
@@ -486,9 +459,13 @@ else:
             prediction[0]
         ):
 
+            percentage = float(
+                probability
+            ) * 100
+
             st.write(
-                f"{class_names[index]} — "
-                f"{probability * 100:.2f}%"
+                f"**{class_names[index]}** "
+                f"— {percentage:.2f}%"
             )
 
             st.progress(
@@ -506,12 +483,12 @@ else:
     )
 
     st.markdown(
-        '<div class="indication-box">',
+        """
+        <div class="info-card">
+        <b>Pemanfaatan secara umum:</b>
+        </div>
+        """,
         unsafe_allow_html=True
-    )
-
-    st.markdown(
-        "**Pemanfaatan secara umum:**"
     )
 
     for item in indications[predicted_class]:
@@ -519,11 +496,6 @@ else:
         st.markdown(
             f"- {item}"
         )
-
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
 
 
 # =========================================================
